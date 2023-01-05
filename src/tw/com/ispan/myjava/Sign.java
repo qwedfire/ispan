@@ -2,6 +2,8 @@ package tw.com.ispan.myjava;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -25,10 +27,35 @@ public class Sign extends JFrame{
 		add(top,BorderLayout.NORTH);
 		
 		myDrawer=new MyDrawer();
+		add(myDrawer,BorderLayout.CENTER);
 		
 		setSize(800,400);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		init();
+	}
+	/**
+	 * 所有按鈕的動作
+	 */
+	private void init() {
+		clear.addActionListener(new ActionListener() {		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				myDrawer.clear();
+			}
+		});
+		undo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				myDrawer.undo();				
+			}
+		});
+		redo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				myDrawer.redo();				
+			}
+		});
 	}
 	public static void main(String[] args) {
 		new Sign();
