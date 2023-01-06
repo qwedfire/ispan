@@ -12,17 +12,25 @@ import java.util.LinkedList;
 import javax.sound.sampled.Line;
 import javax.swing.DebugGraphics;
 import javax.swing.JPanel;
+//1.決定線條全部換顏色和粗細或單一線條顏色和粗細
 
-public class MyDrawer extends JPanel{
+public class MyDrawerV2 extends JPanel{
 	private LinkedList<LinkedList<HashMap<String,Integer>>> lines,recycle;
-	public MyDrawer() {
+	public MyDrawerV2() {
 		setBackground(Color.PINK);
-		MyListener listener=new MyListener();
-		addMouseListener(listener);  //點擊控制
-		addMouseMotionListener(listener); //drag托移控制
+		MyListener listener=new MyListener(this);
+		addMouseListener(listener);  //
+		addMouseMotionListener(listener); //
 		lines=new LinkedList<>();
 		recycle=new LinkedList<>();
 	}
+	/**
+	 * 取得lines
+	 * @return
+	 */
+	LinkedList<LinkedList<HashMap<String,Integer>>> getLines(){
+		return this.lines;
+	};
 	@Override  //看到的外觀由paint方法處理
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);//需要先完成父類別
@@ -45,31 +53,6 @@ public class MyDrawer extends JPanel{
 			}
 		}
 	}
-	//內部類別(外部類別已經有繼承因此創建內部類別繼承)
-	private class MyListener extends MouseAdapter{ 
-		@Override
-		public void mousePressed(MouseEvent e) {
-//			System.out.println("press"+e.getX()+","+e.getY());
-			HashMap<String ,Integer>point=new HashMap();
-			point.put("x", e.getX());point.put("y", e.getY());
-			LinkedList<HashMap<String,Integer>> line=new LinkedList<>();
-			line.add(point);
-			lines.add(line);
-			repaint(); //重畫component類別方法
-		}
-//		@Override
-//		public void mouseReleased(MouseEvent e) {
-//			System.out.println("Released"+e.getX()+","+e.getY());
-//		}
-		@Override
-		public void mouseDragged(MouseEvent e) {
-//			System.out.println("Dragged"+e.getX()+","+e.getY());
-			HashMap<String ,Integer>point=new HashMap();
-			point.put("x", e.getX());point.put("y", e.getY());
-			lines.getLast().add(point);
-			repaint();
-		}		
-	}
 	/**
 	 * 清空按鈕
 	 */
@@ -91,5 +74,35 @@ public class MyDrawer extends JPanel{
 		lines.add(recycle.removeLast());
 		repaint();
 	}
-	
+}
+//外部類別(外部類別已經有繼承因此創建內部類別繼承)
+//此類別用來記錄每個點的資料HashMap
+//再轉成線資料LinkedList
+class MyListener extends MouseAdapter{
+	private MyDrawerV2 myDrawerV2;
+	public MyListener(MyDrawerV2 myDrawerV2) {
+		this.myDrawerV2=myDrawerV2;
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+//			System.out.println("press"+e.getX()+","+e.getY());
+		HashMap<String ,Integer>point=new HashMap();
+		point.put("x", e.getX());point.put("y", e.getY());
+		LinkedList<HashMap<String,Integer>> line=new LinkedList<>();
+		line.add(point);
+		myDrawerV2.getLines().add(line);
+		myDrawerV2.repaint(); //重畫component類別方法
+	}
+//		@Override
+//		public void mouseReleased(MouseEvent e) {
+//			System.out.println("Released"+e.getX()+","+e.getY());
+//		}
+	@Override
+	public void mouseDragged(MouseEvent e) {
+//			System.out.println("Dragged"+e.getX()+","+e.getY());
+		HashMap<String ,Integer>point=new HashMap();
+		point.put("x", e.getX());point.put("y", e.getY());
+		myDrawerV2.getLines().getLast().add(point);
+		myDrawerV2.repaint();
+	}		
 }

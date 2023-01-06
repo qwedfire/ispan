@@ -9,37 +9,34 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import javax.sound.sampled.Line;
 import javax.swing.DebugGraphics;
 import javax.swing.JPanel;
+//1.決定線條全部換顏色和粗細或單一線條顏色和粗細
 
-public class MyDrawer extends JPanel{
-	private LinkedList<LinkedList<HashMap<String,Integer>>> lines,recycle;
-	public MyDrawer() {
+public class MyDrawerV3 extends JPanel{
+	private LinkedList<Line> lines,recycle;
+	private Color nowColor;
+	private float nowWidth;
+	public MyDrawerV3() {
 		setBackground(Color.PINK);
 		MyListener listener=new MyListener();
-		addMouseListener(listener);  //點擊控制
-		addMouseMotionListener(listener); //drag托移控制
+		addMouseListener(listener);  
+		addMouseMotionListener(listener); 
 		lines=new LinkedList<>();
 		recycle=new LinkedList<>();
+		nowColor=Color.red;
+		nowWidth=1;
 	}
 	@Override  //看到的外觀由paint方法處理
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);//需要先完成父類別
-//		if(g instanceof Graphics2D) { 判斷g是不是Graphics2D的子類別或是實作介面
-//			System.out.println("ok");
-//		}else {
-//			System.out.println("no");
-//		}
-		Graphics2D g2d=(Graphics2D)g;
-		g2d.setColor(Color.GRAY);
-		g2d.setStroke(new BasicStroke(4)); //字體粗細
-		
-//		g2d.drawLine(0, 0, 100, 200); 原點0,0 畫到100,200
-		for(LinkedList<HashMap<String,Integer>> line:lines) {
-			for(int i=1;i<line.size();i++) {
-				HashMap<String,Integer>p0=line.get(i-1);
-				HashMap<String,Integer>p1=line.get(i);
+		Graphics2D g2d=(Graphics2D)g;	
+		for(Line line:lines) {
+			g2d.setColor(line.getColor());
+			g2d.setStroke(new BasicStroke(line.getWidth())); //字體粗細
+			for(int i=1;i<line.getPoints().size();i++) {
+				HashMap<String,Integer>p0=line.getPoints().get(i-1);
+				HashMap<String,Integer>p1=line.getPoints().get(i);
 				g2d.drawLine(p0.get("x"), p0.get("y"), p1.get("x"), p1.get("y"));
 				
 			}
@@ -49,24 +46,18 @@ public class MyDrawer extends JPanel{
 	private class MyListener extends MouseAdapter{ 
 		@Override
 		public void mousePressed(MouseEvent e) {
-//			System.out.println("press"+e.getX()+","+e.getY());
 			HashMap<String ,Integer>point=new HashMap();
 			point.put("x", e.getX());point.put("y", e.getY());
-			LinkedList<HashMap<String,Integer>> line=new LinkedList<>();
-			line.add(point);
+			Line line=new Line(nowColor,nowWidth);
+			line.getPoints().add(point);
 			lines.add(line);
 			repaint(); //重畫component類別方法
 		}
-//		@Override
-//		public void mouseReleased(MouseEvent e) {
-//			System.out.println("Released"+e.getX()+","+e.getY());
-//		}
 		@Override
 		public void mouseDragged(MouseEvent e) {
-//			System.out.println("Dragged"+e.getX()+","+e.getY());
 			HashMap<String ,Integer>point=new HashMap();
 			point.put("x", e.getX());point.put("y", e.getY());
-			lines.getLast().add(point);
+			lines.getLast().getPoints().add(point);
 			repaint();
 		}		
 	}
@@ -91,5 +82,16 @@ public class MyDrawer extends JPanel{
 		lines.add(recycle.removeLast());
 		repaint();
 	}
-	
+	public Color getNowColor() {
+		return nowColor;
+	}
+	public void setNowColor(Color nowColor) {
+		this.nowColor = nowColor;
+	}
+	public float getNowWidth() {
+		return nowWidth;
+	}
+	public void setNowWidth(float nowWidth) {
+		this.nowWidth = nowWidth;
+	}
 }
