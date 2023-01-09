@@ -36,12 +36,11 @@ public class MyDrawer extends JPanel{
 		g2d.setStroke(new BasicStroke(4)); //字體粗細
 		
 //		g2d.drawLine(0, 0, 100, 200); 原點0,0 畫到100,200
-		for(LinkedList<HashMap<String,Integer>> line:lines) {
-			for(int i=1;i<line.size();i++) {
+		for(LinkedList<HashMap<String,Integer>> line:lines) { //第一條線到最後一條線
+			for(int i=1;i<line.size();i++) {  //第幾條線的第一個點到最後一個點資料
 				HashMap<String,Integer>p0=line.get(i-1);
 				HashMap<String,Integer>p1=line.get(i);
-				g2d.drawLine(p0.get("x"), p0.get("y"), p1.get("x"), p1.get("y"));
-				
+				g2d.drawLine(p0.get("x"), p0.get("y"), p1.get("x"), p1.get("y")); //畫出兩個點之間的線
 			}
 		}
 	}
@@ -66,7 +65,7 @@ public class MyDrawer extends JPanel{
 //			System.out.println("Dragged"+e.getX()+","+e.getY());
 			HashMap<String ,Integer>point=new HashMap();
 			point.put("x", e.getX());point.put("y", e.getY());
-			lines.getLast().add(point);
+			lines.getLast().add(point);//一筆畫還沒結束因此取得最後一筆LinkedList資料繼續新增point資料
 			repaint();
 		}		
 	}
