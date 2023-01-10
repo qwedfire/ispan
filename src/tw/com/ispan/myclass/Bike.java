@@ -1,6 +1,8 @@
 package tw.com.ispan.myclass;
 
-public class Bike {
+import java.io.Serializable;
+
+public class Bike implements Serializable{
 	protected String color;
 	protected double speed;
 	
@@ -37,7 +39,7 @@ public class Bike {
 	}       //boolean?值1:值2
 	@Override
 	public String toString() {
-		return "Brad";
+		return "bike";
 	}
 	@Override
 	public boolean equals(Object obj) {

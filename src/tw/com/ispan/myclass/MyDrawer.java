@@ -6,20 +6,29 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.Line;
 import javax.swing.DebugGraphics;
 import javax.swing.JPanel;
+//1.決定線條全部換顏色和粗細或單一線條顏色和粗細
 
 public class MyDrawer extends JPanel{
 	private LinkedList<LinkedList<HashMap<String,Integer>>> lines,recycle;
 	public MyDrawer() {
 		setBackground(Color.PINK);
 		MyListener listener=new MyListener();
-		addMouseListener(listener);  //點擊控制
-		addMouseMotionListener(listener); //drag托移控制
+		addMouseListener(listener);  //
+		addMouseMotionListener(listener); //
 		lines=new LinkedList<>();
 		recycle=new LinkedList<>();
 	}
@@ -36,11 +45,12 @@ public class MyDrawer extends JPanel{
 		g2d.setStroke(new BasicStroke(4)); //字體粗細
 		
 //		g2d.drawLine(0, 0, 100, 200); 原點0,0 畫到100,200
-		for(LinkedList<HashMap<String,Integer>> line:lines) { //第一條線到最後一條線
-			for(int i=1;i<line.size();i++) {  //第幾條線的第一個點到最後一個點資料
+		for(LinkedList<HashMap<String,Integer>> line:lines) {
+			for(int i=1;i<line.size();i++) {
 				HashMap<String,Integer>p0=line.get(i-1);
 				HashMap<String,Integer>p1=line.get(i);
-				g2d.drawLine(p0.get("x"), p0.get("y"), p1.get("x"), p1.get("y")); //畫出兩個點之間的線
+				g2d.drawLine(p0.get("x"), p0.get("y"), p1.get("x"), p1.get("y"));
+				
 			}
 		}
 	}
@@ -65,7 +75,7 @@ public class MyDrawer extends JPanel{
 //			System.out.println("Dragged"+e.getX()+","+e.getY());
 			HashMap<String ,Integer>point=new HashMap();
 			point.put("x", e.getX());point.put("y", e.getY());
-			lines.getLast().add(point);//一筆畫還沒結束因此取得最後一筆LinkedList資料繼續新增point資料
+			lines.getLast().add(point);
 			repaint();
 		}		
 	}
@@ -90,5 +100,35 @@ public class MyDrawer extends JPanel{
 		lines.add(recycle.removeLast());
 		repaint();
 	}
-	
+	/**
+	 * 儲存成jepg檔案
+	 */
+	public void saveJEPG() {
+		BufferedImage img=new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_RGB);
+		Graphics2D g2d=img.createGraphics();
+		paint(g2d);//Jpanel 畫到物件g2d
+		try {
+		ImageIO.write(img, "jpeg", new File("dir1/brad.jpg"));
+		System.out.println("save ok");
+		}catch(IOException e) {
+			System.out.println(e);
+		}
+	}
+	public void saveLines() {
+		try(ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream("dir1/lines.sign"))){
+			oos.writeObject(lines);
+			oos.flush();
+			System.out.println("ok");
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+	public void loadLines() {
+		try(ObjectInputStream ois=new ObjectInputStream(new FileInputStream("dir1/lines.sign"))){
+			lines=(LinkedList<LinkedList<HashMap<String,Integer>>>)ois.readObject();
+			repaint();
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+	}
 }

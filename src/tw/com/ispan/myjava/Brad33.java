@@ -29,3 +29,8 @@ class Brad333 extends Brad331{
 		System.out.println("brad333的m2");
 	}
 }
+abstract class Brad334 { 
+	void m1() {}
+	void m2() {}
+	void m3() {}
+}
