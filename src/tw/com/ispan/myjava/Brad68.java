@@ -20,10 +20,10 @@ public class Brad68 {
 				ServerSocket server=new ServerSocket(6666);
 				Socket socket=server.accept();
 				String ip=socket.getInetAddress().getHostAddress();
-				FileOutputStream fout=new FileOutputStream(String.format("dir3/%s.jpg",ip));
+				FileOutputStream fout=new FileOutputStream(String.format("dir3/%s.png",ip));
 				BufferedInputStream bin=new BufferedInputStream(socket.getInputStream());
 				byte[]buf=new byte[1024*2];int len;
-				while((len=bin.read())!=-1) { //網路讀進來的行為
+				while((len=bin.read(buf))!=-1) { //網路讀進來的行為
 					fout.write(buf,0,len);
 				}
 				bin.close();

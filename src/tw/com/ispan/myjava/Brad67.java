@@ -13,7 +13,7 @@ public class Brad67 {
 	public static void main(String[] args) {
 		//read file
 		try {
-			Socket socket=new Socket(InetAddress.getByName("10.10.243.22"),1999);
+			Socket socket=new Socket(InetAddress.getByName("10.10.243.19"),6666);
 			BufferedOutputStream bout=new BufferedOutputStream(socket.getOutputStream());
 			FileInputStream fin=new FileInputStream("dir1/ball1.png");
 			byte[] buf=new byte[4*1024];int len;

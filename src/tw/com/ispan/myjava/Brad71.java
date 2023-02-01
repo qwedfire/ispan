@@ -5,6 +5,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.util.Properties;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,15 +28,39 @@ public class Brad71 {
 	 * 導入外面資料 
 	 * @param json
 	 */
-	static void parseJSON(String json) {
+	static void parseJSON(String json) throws Exception{
+		String url="jdbc:mysql://localhost:3306/iii?user=root&password=root";
+		Properties prop=new Properties();
+		prop.setProperty("user", "root");
+		prop.setProperty("password","root");
+		prop.setProperty("serverTimezone","Asia/Taipei");
+		Connection conn=DriverManager.getConnection(url,prop);
+		String sql="insert into gift(name,place,city,town,lat,lng,pic)values(?,?,?,?,?,?,?)";
+		PreparedStatement pstmt=conn.prepareStatement(sql);
+		
+		
+		
 		JSONArray root=new JSONArray(json);
 		for(int i=0;i<root.length();i++) {
 			JSONObject row=root.getJSONObject(i);
-			String name=row.getString("Name"); 
-			String county=row.getString("County");
-			String township=row.getString("Township");
-			System.out.printf("%s-%s %s\n",name,county,township);
+			String name=row.getString("Name");
+			String place=row.getString("SalePlace"); 
+			String city=row.getString("County");
+			String town=row.getString("Township"); 
+			String lat=row.getString("Latitude");
+			String lng=row.getString("Longitude");
+			String pic=row.getString("Column1");
+			System.out.printf("%s:%s:%s:%s:%s:%s:%s\n",name,place,city,town,lat,lng,pic);
+			pstmt.setString(1, name);
+			pstmt.setString(2, place);
+			pstmt.setString(3, city);
+			pstmt.setString(4, town);
+			pstmt.setString(5, lat);
+			pstmt.setString(6, lng);
+			pstmt.setString(7, pic);
+			pstmt.executeUpdate();
 		}
+		System.out.println("nice");
 	}
 	static String getData(String urlString)throws Exception {
 		URL url=new URL(urlString);
