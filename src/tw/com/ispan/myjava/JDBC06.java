@@ -27,18 +27,14 @@ public class JDBC06 {
             prop.setProperty("serverTimezone", "Asia/Taipei");
             Connection conn = DriverManager.getConnection(url, prop);
             String sqlcount = "select count(*) count from gift";
-            Statement stmt = conn.createStatement();
-            ResultSet recount = stmt.executeQuery(sqlcount);
+            Statement stmt = conn.createStatement();  //創建敘述句
+            ResultSet recount = stmt.executeQuery(sqlcount); //
             recount.next();
             int count = recount.getInt("count");
             int pages = (int) Math.ceil(count * 1.0 / rpp) ;
             if (page > pages||page<=0) throw new MyPageException1("aaaa");
             String sql = "select id,name,place addr from gift order by id limit ?,? ";
-//			String sql="select*from gift order by id limit ?,? ";
-//			String sql="select*from gift where name like ? or place like ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);//避免隱碼攻擊
-//			pstmt.setString(1,"%"+key+"%");
-//			pstmt.setString(2,"%"+key+"%");
+            PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, start);
             pstmt.setInt(2, rpp);
             ResultSet rs = pstmt.executeQuery();

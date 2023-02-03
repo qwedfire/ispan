@@ -28,14 +28,11 @@ public class JDBC03 {
 			prop.setProperty("user", "root");
 			prop.setProperty("password","root");
 			prop.setProperty("serverTimezone","Asia/Taipei");
-			Connection conn=DriverManager.getConnection(url);
-//			Connection conn=DriverManager.getConnection(url,"root","root"); // ( 連接MySQL指令/帳號/密碼)
-//			Connection conn=DriverManager.getConnection(url,prop);
+			Connection conn=DriverManager.getConnection(url,prop);
 			System.out.println("ok2");
 			
-			Statement stmt=conn.createStatement(); //
-//			String sql="insert into tb1(f1,f2)values ('Tom2','2023-02-01')";
-			String sql="";
+			Statement stmt=conn.createStatement();
+			String sql="insert into tb1(f1,f2)values ('Tom2','2023-02-01')";
 			int num=stmt.executeUpdate(sql); //stmt.executeUpdate(sql) 執行MySQL語句會回傳改動的數量
 			System.out.println(num);
 		} catch (SQLException e) {

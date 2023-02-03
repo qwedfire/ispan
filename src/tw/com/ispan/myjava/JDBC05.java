@@ -16,8 +16,6 @@ public class JDBC05 {
 		Scanner scanner = new Scanner(System.in);
 		System.out.print("Keyword = ");
 		String key = scanner.next();
-		
-		
 		try {
 			String url = "jdbc:mysql://127.0.0.1:3306/iii";
 			Properties prop = new Properties();
@@ -26,19 +24,21 @@ public class JDBC05 {
 			prop.setProperty("serverTimezone", "Asia/Taipei");
 			Connection conn = DriverManager.getConnection(url, prop);
 
-			String sql = "SELECT * FROM gift WHERE name LIKE ? OR place LIKE ?";
+			String sql = "SELECT * FROM gift WHERE name LIKE ? OR place LIKE ? OR lat LIKE ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, "%" + key + "%");
 			pstmt.setString(2, "%" + key + "%");
+			pstmt.setString(3, "%" + key + "%");
 			ResultSet rs = pstmt.executeQuery();
 			
 			while (rs.next()) {
 				String v1 = rs.getString("place");
 				String v2 = rs.getString("name");
-				System.out.printf("%s : %s\n", v1, v2);
+				Double v3=rs.getDouble("lat");
+				System.out.printf("%s : %s : %f\n", v1, v2,v3);
 			}
 			
-			
+
 		} catch (SQLException e) {
 			System.out.println(e);
 		}

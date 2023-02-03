@@ -33,8 +33,10 @@ public class JDBC04 {
 			String sql="insert into tb1(f1,f2)value(?,?)";
 			//隱碼攻擊在username進行檢查不會執行MySQL語句
 			PreparedStatement pstmt=conn.prepareStatement(sql);//避免隱碼攻擊
-			pstmt.setString(1, "eric");
-			pstmt.setString(2, "1999-03-04");
+			//一筆資料 參數一,參數二
+			pstmt.setString(1, "GGBB528");
+			pstmt.setString(2, "1998-08-27");
+
 			int num=pstmt.executeUpdate();
 			System.out.println(num);
 		} catch (SQLException e) {

@@ -34,8 +34,7 @@ public class JDBC02 {
 			System.out.println("ok2");
 			
 			Statement stmt=conn.createStatement(); //
-//			String sql="insert into tb1(f1,f2)values ('Tom2','2023-02-01')";
-			String sql="";
+			String sql="insert into tb1(f1,f2)values ('Tom2','2023-02-01')";
 			int num=stmt.executeUpdate(sql); //stmt.executeUpdate(sql) 執行MySQL語句會回傳改動的數量
 			System.out.println(num);
 		} catch (SQLException e) {
